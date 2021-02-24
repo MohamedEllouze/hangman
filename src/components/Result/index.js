@@ -1,11 +1,10 @@
 import React from 'react'
-import { Wrapper, Content, Title, Button } from './styled'
-
+import './style-result.scss'
 export default ({ buttonAction, disabled, title, buttonLabel }) => (
-  <Wrapper disabled={disabled}>
-    <Content>
-      <Title> {title}</Title>
-      <Button onClick={buttonAction}>{buttonLabel}</Button>
-    </Content>
-  </Wrapper>
+  <div className={`wrapper-result ${disabled?'disabled':''}` }>
+    <div className= 'content'>
+      <div className='title'> {title}</div>
+      <button className='button' onClick={buttonAction}>{buttonLabel}</button>
+    </div>
+  </div>
 )

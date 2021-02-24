@@ -1,17 +1,18 @@
 import React from 'react'
-import { Item, Wrapper } from './styled'
-
+import './style.scss'
 export default ({ spaces, correctLetters, wordFromAPI }) => (
-  <Wrapper>
-    {spaces.map((item, index) => (
-      <Item disabled key={`space-${index}`} />
-    ))}
-    {wordFromAPI.map((letter, index) => {
-      return (
-        <Item key={index}>
-          {correctLetters.find(x => x === letter) ? letter : ''}
-        </Item>
+  <div className= 'wrapper-anserbox'>
+    {spaces.map((item, index) => {
+      return(
+      <div className = {`item ${spaces?"disabled":""}`} key={index}/>
       )
     })}
-  </Wrapper>
+    {wordFromAPI.map((letter, index) => {
+      return (
+        <div className =  "item"  key={index}>
+          {correctLetters.find(x => x === letter) ? letter : ''}
+        </div>
+      )
+    })}
+  </div>
 )

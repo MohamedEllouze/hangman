@@ -1,17 +1,9 @@
 import React, { useState, useRef } from 'react'
-import { Button } from './components/Result/styled'
 import AnswerBox from './components/AnswerBox'
 import FailBox from './components/FailBox'
 import Result from './components/Result'
 import Human from './components/Human'
-import {
-  Gallow,
-  DownPipe,
-  RightBlueTriangle,
-  Input,
-  AppWrapper,
-  GameInstruction,
-} from './styled'
+import Instance from './components/instance'
 
 export default () => {
   const [wordFromAPI, setWordFromAPI] = useState([])
@@ -27,7 +19,7 @@ export default () => {
   const [word, setWord] = useState('')
   const inputRef = useRef(null)
 
-  const handOnKeyPress = event => {
+  const input_letter = event => {
     let keyChar = event.key
     event.preventDefault()
     if (
@@ -40,26 +32,25 @@ export default () => {
         !failedLetters.find(x => x === keyChar) &&
         !correctLetters.find(x => x === keyChar)
       ) {
-        let count = 0
-        for (let i = 0; i < wordFromAPI.length; i++) {
-          if (keyChar === wordFromAPI[i]) {
-            count++
-            const newCorrectLetters = correctLetters.concat([keyChar])
+        let failed = true
+        wordFromAPI.map( element => {
+          if (keyChar === element) {
+            const newCorrectLetters = correctLetters.concat(keyChar)
             setCorrectLetters(newCorrectLetters)
             countCorrectLetters(newCorrectLetters)
-            return
+            failed = false
           }
-        }
-        if (count === 0) {
+        })
+        if (failed)  {
+          setFailedLetters(failedLetters.concat(keyChar))
           if (failedLetters.length === 10) {
             setResultBox({
               disabled: false,
               title: `Game Over { word: ${word} }`,
-              buttonLabel: 'Restart Game',
+              buttonLabel: 'New Word',
             })
             setIsGameOver(true)
           }
-          setFailedLetters(failedLetters.concat([keyChar]))
         }
       }
     }
@@ -108,48 +99,15 @@ export default () => {
     setWord(word)
   }
 
-  const getDataFromAPI = () => {
-    const params = {
-      hasDictionaryDef: true,
-      minCorpusCount: 0,
-      maxCorpusCount: -1,
-      maxDictionaryCount: -1,
-      minLength: 3,
-      maxLength: 12,
-      api_key: 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5',
-    }
-    let url = new URL('http://api.wordnik.com/v4/words.json/randomWord')
-    Object.keys(params).forEach(key =>
-      url.searchParams.append(key, params[key])
-    )
-    fetch(url, {
-      method: 'GET',
-    })
+  const getDataFromAPI = async () => {
+    await Instance.get_randomword()
       .then(response => {
-        const responseStatus = response.status
-        if (responseStatus >= 400 && responseStatus <= 500) {
-          throw Error('API error, creating random word localy!')
-        }
-        return response.json()
-      })
-      .then(response => {
-        wordSetter(response.word)
+        console.log("randword",response.data.word)
+        wordSetter(response.data.word)
         return response.status
       })
       .catch(error => {
         console.log(error)
-        const fruits = [
-          'Apple',
-          'Orange',
-          'Pear',
-          'Lemon',
-          'Kiwi',
-          'Watermelon',
-          'Strawberry',
-          'Banana',
-        ]
-        const randomFruit = fruits[Math.floor(Math.random() * fruits.length)]
-        wordSetter(randomFruit)
       })
   }
 
@@ -167,26 +125,24 @@ export default () => {
 
   const filterUniqueItems = items => {
     const obj = {},
-      uniqueItems = []
-    for (var i = 0, l = items.length; i < l; ++i) {
-      if (obj.hasOwnProperty(items[i])) {
-        continue
-      }
-      uniqueItems.push(items[i])
-      obj[items[i]] = 1
-    }
+    uniqueItems = []
+    items.map(item=>{
+    !(obj.hasOwnProperty(item)) &&  uniqueItems.push(item)
+    obj[item] = 1
+    })
+    console.log("uniqueItems",uniqueItems) 
     return uniqueItems
   }
 
   return (
-    <AppWrapper>
-      <GameInstruction>Press any keys (letters) to play.</GameInstruction>
-
-      <Gallow>
-        <DownPipe />
-        <Input
+    <div className ="AppWrapper">
+      <div className = "GameInstruction"> Press any letters to play.</div>
+      <div className = "Gallow">
+        <div className="DownPipe" />
+        <input
+          className='input'
           ref={inputRef}
-          {...(!isGameOver && !isPaused && { onKeyDown: handOnKeyPress })}
+          {...(!isGameOver && !isPaused && { onKeyDown: input_letter })}
           onFocus={() => setIsPaused(false)}
           onBlur={() => {
             if (!isGameOver) {
@@ -199,7 +155,7 @@ export default () => {
             }
           }}
         />
-      </Gallow>
+      </div>
       <Human failedLetterCount={failedLetters.length} />
 
       <FailBox failedLetters={failedLetters} />
@@ -209,14 +165,14 @@ export default () => {
         spaces={emptyBoxList()}
       />
 
-      <RightBlueTriangle />
+      <div className = "RightBlueTriangle" />
       <Result
         title={resultBox.title}
         disabled={resultBox.disabled}
         buttonLabel={resultBox.buttonLabel}
         buttonAction={isPaused ? continueGame : startGame}
       />
-      {!isPaused && <Button pause> Pause Game</Button>}
-    </AppWrapper>
+      {!isPaused && <button className='button pause'> Pause Game</button>}
+    </div>
   )
 }

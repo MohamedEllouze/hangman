@@ -1,72 +1,54 @@
 import React from 'react'
-import {
-  Man,
-  Head,
-  Ear,
-  Hair,
-  Eye,
-  Nose,
-  Mouth,
-  Neck,
-  Arm,
-  Hand,
-  Corpus,
-  Leg,
-  Chest,
-  Foot,
-} from './styled'
+import './style.scss'
 
-const VisibilitySetter = ({ visible, component: Component, ...rest }) =>
-  visible ? <Component {...rest} /> : null
+const VisibilitySetter = ({ visible, classes, ...props }) =>
+  visible ? <div className= {classes} {...props} /> : null
 
 export default ({ failedLetterCount }) => (
-  <Man>
-    <VisibilitySetter visible={failedLetterCount >= 1} component={Head}>
-      <Hair />
-      <Eye />
-      <Eye right />
-      <Ear />
-      <Ear right />
-      <Nose />
-      <Mouth sad={failedLetterCount >= 11} />
+  <div className ='man'>
+    <VisibilitySetter visible={failedLetterCount >= 1} classes="head">
+      <div className= 'hair' />
+      <div className= 'hair right' />
+      <div className= 'eye' />
+      <div className= 'eye right' />
+      <div className= 'ear' />
+      <div className= 'ear right' />
+      <div  className= 'nose' />
+      <div className= 'mouth'  />
     </VisibilitySetter>
-    <VisibilitySetter visible={failedLetterCount >= 2} component={Neck} />
-    <VisibilitySetter visible={failedLetterCount >= 3} component={Corpus}>
-      <VisibilitySetter visible={failedLetterCount >= 3} component={Chest}>
-        <VisibilitySetter visible={failedLetterCount >= 4} component={Arm}>
-          <VisibilitySetter visible={failedLetterCount >= 6} component={Hand} />
+    <VisibilitySetter visible={failedLetterCount >= 2} classes="neck" />
+    <VisibilitySetter visible={failedLetterCount >= 3} classes="corpus">
+      <VisibilitySetter visible={failedLetterCount >= 3} classes="chest">
+        <VisibilitySetter visible={failedLetterCount >= 4} classes="arm">
+          <VisibilitySetter visible={failedLetterCount >= 6} classes="hand" />
         </VisibilitySetter>
-        <VisibilitySetter visible={failedLetterCount >= 8} component={Leg}>
+        <VisibilitySetter visible={failedLetterCount >= 8} classes="leg">
           <VisibilitySetter
             visible={failedLetterCount >= 10}
-            component={Foot}
+            classes="foot"
           />
         </VisibilitySetter>
       </VisibilitySetter>
       <VisibilitySetter
         visible={failedLetterCount >= 3}
-        component={Chest}
-        right
+        classes="chest right"
       >
         <VisibilitySetter
           visible={failedLetterCount >= 5}
-          component={Arm}
-          right
+          classes="arm right"
         >
-          <VisibilitySetter visible={failedLetterCount >= 7} component={Hand} />
+          <VisibilitySetter visible={failedLetterCount >= 7} classes="hand" />
         </VisibilitySetter>
         <VisibilitySetter
           visible={failedLetterCount >= 9}
-          component={Leg}
-          right
+          classes="leg right"
         >
           <VisibilitySetter
             visible={failedLetterCount >= 11}
-            component={Foot}
-            right
+            classes="foot right"
           />
         </VisibilitySetter>
       </VisibilitySetter>
     </VisibilitySetter>
-  </Man>
+  </div>
 )

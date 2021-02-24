@@ -1,15 +1,15 @@
 import React from 'react'
-import { Wrapper, List, ListItem, Title } from './styled'
+import './style.scss'
 
 export default ({ failedLetters }) => (
-  <Wrapper>
-    <Title>You missed:</Title>
-    <List>
+  <div className= 'wrapper-failbox'>
+    <div className= 'title'>You missed:</div>
+    <div className= 'list'>
       {failedLetters.map(item => (
-        <ListItem key={item}>{item}</ListItem>
+        <div className = 'listItem' key={item}>{item}</div>
       ))}
-    </List>
-  </Wrapper>
+    </div>
+  </div>
 )
 
 

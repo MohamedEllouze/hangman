@@ -1,21 +1,22 @@
-import styled from 'styled-components'
-
-export const Wrapper = styled.div`
+.wrapper-failbox { 
   position: absolute;
-  top: 40px;
+  top: 60px;
   right: 0;
   width: 500px;
-`
-export const Title = styled.h1`
-  text-transform: uppercase;
-  color: var(--color-darkgrey);
-`
-export const List = styled.div`
+}
+
+.title {
+    text-transform: uppercase;
+    color: var(--color-darkgrey);
+}
+
+.list {
   width: 100%;
   height: 70px;
-`
-export const ListItem = styled.div`
-  text-align: center;
+}
+
+.listItem{
+    text-align: center;
   color: var(--color-blue);
   float: left;
   font-size: var(--font-size-large);
@@ -30,4 +31,4 @@ export const ListItem = styled.div`
   &:last-child {
     margin-right: 0;
   }
-`
+}
